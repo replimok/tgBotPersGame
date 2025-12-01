@@ -220,7 +220,7 @@ async def handle_callback(update: Update, context: CallbackContext) -> None:
         print(data)
         _g, game_v, game_format = data.split("_")
         games = [
-            "Самосаботаж", "Верь в себя", "Пять дорог",
+            "Самосаботаж", "Быть собой", "Пять дорог",
             "Ключ к себе", "Энергия рода", "Помогите выбрать"
         ]
         game_name = games[int(game_v)]
@@ -400,7 +400,7 @@ async def choose_game(query, context, format_type):
     text = f"Вы выбрали {format_name} игру. Выберите игру:"
 
     games = [
-        "Самосаботаж", "Верь в себя", "Пять дорог",
+        "Самосаботаж", "Быть собой", "Пять дорог",
         "Ключ к себе", "Энергия рода", "Помогите выбрать"
     ]
 
