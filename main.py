@@ -18,6 +18,9 @@ logging.basicConfig(
     level=logging.INFO
 )
 
+CHANNEL_USERNAME = os.getenv('CHANNEL_USERNAME')
+ADMIN_CHAT_ID = os.getenv('ADMIN_CHAT_ID')
+TOKEN = os.getenv("TOKEN")
 
 ########################################################################################################################
 ########################################################################################################################
@@ -89,7 +92,7 @@ async def handle_user_request(update: Update, context: CallbackContext) -> None:
 async def check_subscription(user_id: int, context: CallbackContext) -> bool:
     """Проверяет, подписан ли пользователь на канал"""
     try:
-        member = await context.bot.get_chat_member(chat_id=os.getenv('CHANNEL_USERNAME'), user_id=user_id)
+        member = await context.bot.get_chat_member(chat_id=CHANNEL_USERNAME, user_id=user_id)
         return member.status in [ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
     except Exception as e:
         print(f"Ошибка проверки подписки: {e}")
@@ -99,7 +102,7 @@ async def check_subscription(user_id: int, context: CallbackContext) -> bool:
 async def show_subscription_required(update: Update, context: CallbackContext) -> None:
     """Показывает сообщение о необходимости подписки"""
     keyboard = [
-        [InlineKeyboardButton("Подписаться на канал", url=f"https://t.me/{os.getenv('CHANNEL_USERNAME')[1:]}")],
+        [InlineKeyboardButton("Подписаться на канал", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
         [InlineKeyboardButton("✅ Я подписался", callback_data="check_subscription")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -183,7 +186,7 @@ async def handle_callback(update: Update, context: CallbackContext) -> None:
             await query.edit_message_text(
                 "❌ Вы еще не подписались на канал. Пожалуйста, подпишитесь и попробуйте снова.",
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("Подписаться на канал", url=f"https://t.me/{os.getenv('CHANNEL_USERNAME')[1:]}")],
+                    [InlineKeyboardButton("Подписаться на канал", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
                     [InlineKeyboardButton("✅ Я подписался", callback_data="check_subscription")]
                 ])
             )
@@ -232,7 +235,7 @@ async def handle_callback(update: Update, context: CallbackContext) -> None:
 
 async def send_booking_notification(context: CallbackContext, game_name: str, game_format: str, username: str, user_id: int):
     """Отправка уведомления администратору о записи на игру"""
-    admin_chat_id = os.getenv('ADMIN_CHAT_ID')  # Замените на ваш chat_id
+    admin_chat_id = ADMIN_CHAT_ID  # Замените на ваш chat_id
 
     notification_text = (
         "🎯 Новая запись на игру!\n\n"
@@ -418,7 +421,7 @@ def main() -> None:
 
 
     """Запуск бота"""
-    application = Application.builder().token(os.getenv("TOKEN")).build()
+    application = Application.builder().token(TOKEN).build()
 
     # Обработчики команд
     application.add_handler(CommandHandler("start", start))
